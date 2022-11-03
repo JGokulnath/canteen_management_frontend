@@ -9,7 +9,7 @@ const initialState = {
 };
 
 export const fetchProducts = createAsyncThunk("getProducts", async () => {
-  const response = await axios.get("products");
+  const response = await axios.get("products", { withCredentials: true });
   return [...response.data.products];
 });
 
@@ -25,15 +25,25 @@ export const productSlice = createSlice({
       newCart.push({ product: newData, quantity: 1 });
       state.cart = [...newCart];
     },
+    getItemQuantity: (state, action) => {},
     increaseQuantity: (state, action) => {
       let newCart = [...state.cart];
-      let newDataIndex = newCart.findIndex(
+      let newItem = newCart.find((item) => item.productId === action.payload);
+      if (newItem) {
+        state.cart = [
+          ...newCart,
+          { ...newItem, quantity: newItem.quantity + 1 },
+        ];
+      } else {
+        state.cart = [...newCart, { productId: action.payload, quantity: 1 }];
+      }
+      /*let newDataIndex = newCart.findIndex(
         (item) => item.product._id === action.payload
       );
       let newData = newCart[newDataIndex];
       newData = { ...newData, quantity: newData.quantity + 1 };
       newCart[newDataIndex] = newData;
-      state.cart = [...newCart];
+      state.cart = [...newCart];*/
     },
     decreaseQuantity: (state, action) => {
       let newCart = [...state.cart];

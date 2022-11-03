@@ -5,6 +5,7 @@ import App from "./App";
 import "./axios/axios";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
+import { ShoppingCartProvider } from "./context/ShoppingCartContext";
 import { store } from "./redux/store";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -13,7 +14,9 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <Provider store={store}>
-        <App />
+        <ShoppingCartProvider>
+          <App />
+        </ShoppingCartProvider>
       </Provider>
     </BrowserRouter>
   </React.StrictMode>

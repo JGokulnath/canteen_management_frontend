@@ -1,10 +1,9 @@
 import React from "react";
 import { Card, Button } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { selectCart, removeFromCart } from "../redux/productSlice";
-const CartTable = () => {
-  const dispatch = useDispatch();
-  const cartItems = useSelector(selectCart);
+import { selectProducts } from "../redux/productSlice";
+import { useShoppingCart } from "../context/ShoppingCartContext";
+const CartTable = ({ cartItems }) => {
   return (
     <div>
       <Card>
@@ -21,7 +20,7 @@ const CartTable = () => {
                 <span>Description</span>
               </th>
               <th>
-                <span>Action</span>
+                <span>Quantity</span>
               </th>
             </tr>
           </thead>
@@ -39,12 +38,7 @@ const CartTable = () => {
                     <span>{item.desc}</span>
                   </th>
                   <th>
-                    <Button
-                      color="warning"
-                      onClick={() => dispatch(removeFromCart(item._id))}
-                    >
-                      Remove
-                    </Button>
+                    <span>{item.quantity}</span>
                   </th>
                 </tr>
               );
