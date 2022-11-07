@@ -41,12 +41,25 @@ const Login = () => {
       }
     }
   };
-  const onRegisterHandler = (e) => {
+  const onRegisterHandler = async (e) => {
     e.preventDefault();
     if (name.length === 0 || pwd.length === 0 || pwd !== cnfrmPwd)
       setError(true);
     else {
       setError(false);
+      try {
+        const response = await axios.post("register", {
+          username: name,
+          password: pwd,
+        });
+        if (response.status === 201) {
+          window.alert("Account Created! Verify your email");
+          setIsSignIn(true);
+        }
+      } catch (err) {
+        console.log(err);
+        window.alert(err.response.data);
+      }
     }
   };
   if (sessionStorage.getItem("accessToken")) {
@@ -80,17 +93,7 @@ const Login = () => {
                     onChange={(e) => setName(e.target.value)}
                   />
                 </FormGroup>
-                <FormGroup>
-                  <Label for="Username">Email</Label>
-                  <Input
-                    id="Username"
-                    name="name"
-                    type="text"
-                    value={name}
-                    required
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                </FormGroup>
+
                 <FormGroup>
                   <Label for="Password">Password</Label>
                   <Input

@@ -3,6 +3,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import { Spinner } from "reactstrap";
 import axios from "axios";
 import Header from "../components/Header";
+import AccountPending from "../pages/AccountPending";
 const Layout = () => {
   const [authStatus, setAuthStatus] = useState("idle");
 
@@ -20,7 +21,8 @@ const Layout = () => {
     verifyToken()
       .then((res) => {
         if (res.user) {
-          setAuthStatus("succeeded");
+          if (res.verified) setAuthStatus("succeeded");
+          else setAuthStatus("pending");
         }
       })
       .catch((err) => {
@@ -36,7 +38,7 @@ const Layout = () => {
   return (
     <div>
       <Header />
-      <Outlet />
+      {authStatus === "pending" ? <AccountPending /> : <Outlet />}
     </div>
   );
 };
