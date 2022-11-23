@@ -1,26 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { Card, CardTitle, CardText, Button, ButtonGroup } from "reactstrap";
-import { selectCart, increaseQuantity } from "../redux/productSlice";
-const Product = ({ title, price, desc, add, remove, increase, decrease }) => {
-  //const cartItems = useSelector(selectCart);
-  const [quantity, setQuantity] = useState(0);
-  //const isAdded = cartItems.find((item) => item._id === title) && true;
-  const addQuantityHandler = () => {
-    setQuantity((prev) => {
-      if (prev === 0) add(title);
-      else increase(title);
-      return prev + 1;
-    });
-    //if (cartItems.includes(title)) remove(title);
-    //else add(title);
-  };
-  const removeQuantityHandler = () => {
-    setQuantity((prev) => {
-      if (prev === 1) remove(title);
-      else decrease(title);
-      return prev - 1;
-    });
-  };
+import { useShoppingCart } from "../context/ShoppingCartContext";
+const Product = ({ title, price, desc }) => {
+  const { getItemQuantity, increaseCartQuantity, decreaseCartQuantity } =
+    useShoppingCart();
+  const quantity = getItemQuantity(title);
   return (
     <Card
       body
@@ -33,13 +17,27 @@ const Product = ({ title, price, desc, add, remove, increase, decrease }) => {
       <CardTitle tag="h2">${price}</CardTitle>
       <CardText>{desc}</CardText>
       {quantity > 0 ? (
-        <ButtonGroup>
-          <Button onClick={addQuantityHandler}>+</Button>
-          <span>{quantity}</span>
-          <Button onClick={removeQuantityHandler}>-</Button>
-        </ButtonGroup>
+        <div className="d-flex justify-content-between">
+          <Button
+            size="xs"
+            className="px-4"
+            onClick={() => decreaseCartQuantity(title)}
+          >
+            -
+          </Button>
+          <div>
+            <span>{quantity}</span>
+          </div>
+          <Button
+            size="xs"
+            className="px-4"
+            onClick={() => increaseCartQuantity(title)}
+          >
+            +
+          </Button>
+        </div>
       ) : (
-        <Button color="primary" onClick={addQuantityHandler}>
+        <Button color="primary" onClick={() => increaseCartQuantity(title)}>
           Add to cart
         </Button>
       )}

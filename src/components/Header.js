@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link, NavLink } from "react-router-dom";
 import {
   Collapse,
   Navbar,
@@ -7,11 +7,10 @@ import {
   NavbarBrand,
   Nav,
   NavItem,
-  NavLink,
   Button,
 } from "reactstrap";
 
-const Header = () => {
+const Header = ({ isAdmin }) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
@@ -19,21 +18,29 @@ const Header = () => {
     sessionStorage.clear();
     navigate("/login");
   };
+  const adminNavLinks = [
+    { title: "Inventory", path: "/products" },
+    { title: "Menu", path: "/menu" },
+  ];
   return (
     <Navbar color="primary" expand="sm">
       <NavbarBrand href="/">K Canteen</NavbarBrand>
       <NavbarToggler onClick={toggle} />
       <Collapse isOpen={isOpen} navbar>
         <Nav className="me-auto" navbar>
-          <NavItem>
-            <NavLink href="/">Home</NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink href="/orders">Orders</NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink href="/">Profile</NavLink>
-          </NavItem>
+          {!isAdmin ? (
+            <NavItem>
+              <Link to="/orders">Orders</Link>
+            </NavItem>
+          ) : (
+            adminNavLinks.map((item) => (
+              <NavItem key={item.title}>
+                <NavLink to={item.path} className="nav-link">
+                  {item.title}
+                </NavLink>
+              </NavItem>
+            ))
+          )}
         </Nav>
         <Button color="light" onClick={handleLogout}>
           Logout
